@@ -74,6 +74,15 @@ class DocumentController extends Controller
         return redirect()->route('dashboard')->with('success', 'Documento atualizado com sucesso!');
     }
 
+    public function destroy($id)
+{
+    $document = auth()->user()->documents()->findOrFail($id);
+    $document->delete();
+
+    return redirect()->route('dashboard')->with('success', 'Documento excluído com sucesso!');
+}
+
+
     public function download($id)
     {
         $document = auth()->user()->documents()->findOrFail($id);

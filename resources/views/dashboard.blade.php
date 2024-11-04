@@ -6,17 +6,20 @@
     <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        .dropdown-menu {
-            display: none;
-        }
+.dropdown-menu {
+    display: none;
+}
+.dropdown-menu.show {
+    display: block;
+}
+
     </style>
     <script>
-        // Função para alternar a visibilidade do menu suspenso
-        function toggleDropdown() {
-            document.getElementById('dropdownMenu').classList.toggle('hidden');
-        }
+function toggleDropdown() {
+    document.getElementById('dropdownMenu').classList.toggle('show');
+}
+
         
-        // Fecha o dropdown se o usuário clicar fora dele
         window.addEventListener('click', function(event) {
             const dropdownMenu = document.getElementById('dropdownMenu');
             const dropdownButton = document.getElementById('dropdownButton');
@@ -38,8 +41,8 @@
                     {{ Auth::user()->name }}
                 </button>
                 <div id="dropdownMenu" class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
-                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Editar Perfil</a>
-                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Mudar Senha</a>
+                    <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Perfil</a>
+                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Editar Senha</a>
                     <form action="{{ route('logout') }}" method="POST" class="block">
                         @csrf
                         <button type="submit" class="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200">Sair</button>
@@ -61,8 +64,14 @@
                     <li class="px-4 py-4 border-b border-gray-200 flex justify-between items-center">
                         <span>{{ $document->title }}</span>
                         <div>
-                            <a href="{{ route('documents.download', $document->id) }}" class="text-blue-600 hover:underline mr-4">Baixar</a>
+                            <!-- Links de Download -->
+                            <a href="{{ route('documents.download', ['id' => $document->id, 'format' => 'pdf']) }}" class="text-blue-600 hover:underline mr-4">Baixar PDF</a>
+                            <a href="{{ route('documents.download', ['id' => $document->id, 'format' => 'docx']) }}" class="text-blue-600 hover:underline mr-4">Baixar DOCX</a>
+             
+                            <!-- Link de Edição -->
                             <a href="{{ route('documents.edit', $document->id) }}" class="text-yellow-600 hover:underline mr-4">Editar</a>
+                            
+                            <!-- Formulário de Exclusão -->
                             <form action="{{ route('documents.destroy', $document->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
